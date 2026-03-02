@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="BrotherBox">
+  <main>
+    <h1>PING. PING. PING.</h1>
+    <p>BrotherBox — a trusted partner in building more.</p>
+    <nav>
+      <a href="/art/">Art</a>
+      <a href="/exceptions/">Exceptions</a>
+      <a href="/tools/">Tools</a>
+    </nav>
+  </main>
+</Layout>
+
+<style>
+  main {
+    text-align: center;
+    padding: 2rem;
+    font-family: monospace;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  nav {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>

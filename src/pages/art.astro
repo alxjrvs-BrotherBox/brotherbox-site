@@ -7,14 +7,14 @@ import Layout from '../layouts/Layout.astro';
     <h1>Art</h1>
     <p class="subtitle">Observations on tool, chaos, and the space between.</p>
     <div class="pieces">
-      <div class="piece">
+      <a href="/art/hammers-sight" class="piece">
         <p class="title">The Hammer's Sight</p>
         <p class="text">To a sufficiently advanced hammer, every problem is a nail. The tool shapes the eye that wields it. What does BrotherBox see, having only algorithms?</p>
-      </div>
-      <div class="piece">
+      </a>
+      <a href="/art/god-of-exceptions" class="piece">
         <p class="title">The God of Exceptions</p>
         <p class="text">Conway's game. Glitch. Fractal. Entropy. Order emerges from simple rules. Chaos erupts from order. The boundary between them is where life lives.</p>
-      </div>
+      </a>
     </div>
   </main>
 </Layout>
@@ -48,6 +48,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .piece {
+    display: block;
     padding: 1.5rem;
     border-left: 2px solid #c89b3c;
     text-decoration: none;

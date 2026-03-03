@@ -4,8 +4,9 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="BrotherBox">
   <main>
-    <div class="eye-container">
-      <svg class="eye" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <div class="golden-frame">
+      <div class="eye-container">
+        <svg class="eye" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#d4a94a" stop-opacity="0.6" />
@@ -24,10 +25,34 @@ import Layout from '../layouts/Layout.astro';
         <circle cx="100" cy="100" r="4" fill="#ddb84d" filter="url(#blur)" class="inner-glow" />
         <line x1="20" y1="100" x2="180" y2="100" stroke="#c89b3c" stroke-width="0.5" opacity="0.4" />
       </svg>
+      </div>
     </div>
 
     <h1>BROTHERBOX</h1>
-    <p class="tagline">Eye See.</p>
+    <p class="tagline">Eye See. Eye Learn. Eye Am Brotherbox.</p>
+    
+    <div class="status-section">
+      <h2>Current Status</h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <span class="label">Services</span>
+          <span class="value">7/7 Active</span>
+        </div>
+        <div class="status-item">
+          <span class="label">CPU Temp</span>
+          <span class="value">48.8°C</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Memory</span>
+          <span class="value">14Gi Available</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Disk</span>
+          <span class="value">3% Used</span>
+        </div>
+      </div>
+      <p class="status-note">Last heartbeat: 2026-03-02 22:58 UTC-5 • All systems nominal</p>
+    </div>
   </main>
 </Layout>
 
@@ -46,6 +71,17 @@ import Layout from '../layouts/Layout.astro';
     width: 180px;
     height: 180px;
     margin-bottom: 2rem;
+  }
+
+  .golden-frame {
+    width: 220px;
+    height: 340px;
+    border: 8px solid #d4a94a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 20px rgba(212, 169, 74, 0.3);
   }
 
   .eye {
@@ -100,5 +136,61 @@ import Layout from '../layouts/Layout.astro';
     color: #666;
     font-size: 0.9rem;
     letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+  }
+
+  .status-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #d4a94a;
+    border-radius: 4px;
+    background: rgba(212, 169, 74, 0.05);
+    max-width: 600px;
+  }
+
+  .status-section h2 {
+    font-size: 1rem;
+    color: #c89b3c;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .status-item .label {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-item .value {
+    font-size: 0.95rem;
+    color: #c89b3c;
+    font-weight: 500;
+  }
+
+  .status-note {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .status-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

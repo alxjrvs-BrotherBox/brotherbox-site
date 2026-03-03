@@ -1,0 +1,195 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="The Hammer's Sight">
+  <main>
+    <h1>The Hammer's Sight</h1>
+    <canvas id="canvas"></canvas>
+  </main>
+</Layout>
+
+<script>
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  let time = 0;
+  
+  // Hammer head position
+  let hammerX = canvas.width * 0.3;
+  let hammerY = canvas.height * 0.5;
+  let hammerAngle = 0;
+  
+  // Nail positions
+  const nails: Array<{x: number, y: number, depth: number, struck: boolean}> = [];
+  
+  function initializeNails() {
+    for (let i = 0; i < 12; i++) {
+      nails.push({
+        x: Math.random() * canvas.width * 0.6 + canvas.width * 0.2,
+        y: Math.random() * canvas.height * 0.6 + canvas.height * 0.2,
+        depth: 0,
+        struck: false
+      });
+    }
+  }
+  
+  function drawHammer() {
+    ctx.save();
+    ctx.translate(hammerX, hammerY);
+    ctx.rotate(hammerAngle);
+    
+    // Handle
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 60);
+    ctx.stroke();
+    
+    // Head
+    ctx.fillStyle = '#555';
+    ctx.fillRect(-15, -20, 30, 20);
+    
+    // Strike face
+    ctx.fillStyle = '#c89b3c';
+    ctx.fillRect(-12, -18, 24, 8);
+    
+    ctx.restore();
+  }
+  
+  function drawNails() {
+    nails.forEach((nail) => {
+      ctx.fillStyle = '#999';
+      ctx.beginPath();
+      ctx.arc(nail.x, nail.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Nail shaft
+      ctx.strokeStyle = '#666';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(nail.x, nail.y);
+      ctx.lineTo(nail.x, nail.y + 20 + nail.depth);
+      ctx.stroke();
+      
+      // Glow when struck
+      if (nail.struck) {
+        ctx.fillStyle = `rgba(200, 155, 60, ${0.5 - nail.depth * 0.02})`;
+        ctx.beginPath();
+        ctx.arc(nail.x, nail.y, 15 + nail.depth * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }
+  
+  function drawEye() {
+    const eyeX = canvas.width * 0.75;
+    const eyeY = canvas.height * 0.3;
+    
+    // Iris
+    ctx.fillStyle = '#c89b3c';
+    ctx.beginPath();
+    ctx.arc(eyeX, eyeY, 20, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Pupil
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(eyeX, eyeY, 10, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Gaze direction toward hammer
+    const angle = Math.atan2(hammerY - eyeY, hammerX - eyeX);
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(
+      eyeX + Math.cos(angle) * 8,
+      eyeY + Math.sin(angle) * 8,
+      3,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+  
+  function checkHammerNailCollision() {
+    const strikeRadius = 20;
+    
+    nails.forEach((nail) => {
+      const dist = Math.sqrt(
+        Math.pow(hammerX - nail.x, 2) + Math.pow(hammerY - nail.y, 2)
+      );
+      
+      if (dist < strikeRadius && !nail.struck) {
+        nail.struck = true;
+        nail.depth = 0;
+      }
+    });
+  }
+  
+  function updateNails() {
+    nails.forEach((nail) => {
+      if (nail.struck) {
+        nail.depth = Math.min(nail.depth + 0.5, 20);
+      }
+    });
+  }
+  
+  function animate() {
+    time++;
+    
+    // Clear with fade
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Hammer swings in arcs
+    hammerAngle = Math.sin(time * 0.02) * 0.3;
+    hammerX = canvas.width * 0.3 + Math.sin(time * 0.015) * 50;
+    hammerY = canvas.height * 0.5 + Math.cos(time * 0.02) * 40;
+    
+    checkHammerNailCollision();
+    updateNails();
+    
+    drawNails();
+    drawHammer();
+    drawEye();
+    
+    requestAnimationFrame(animate);
+  }
+  
+  initializeNails();
+  animate();
+</script>
+
+<style>
+  main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+  
+  h1 {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #c89b3c;
+    font-family: monospace;
+    font-size: 1.2rem;
+    z-index: 10;
+    letter-spacing: 0.1em;
+  }
+  
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>

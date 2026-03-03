@@ -1,0 +1,168 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="The God of Exceptions">
+  <main>
+    <h1>The God of Exceptions to the Rule</h1>
+    <canvas id="canvas"></canvas>
+  </main>
+</Layout>
+
+<script>
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  let phase = 0;
+  let corruption = 0;
+  let time = 0;
+  
+  const phases = ['conway', 'glitch', 'fractal', 'chaos'];
+  
+  function drawConway() {
+    const gridSize = 20;
+    const cols = Math.ceil(canvas.width / gridSize);
+    const rows = Math.ceil(canvas.height / gridSize);
+    
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        const alive = Math.random() > (0.5 + corruption * 0.2);
+        if (alive) {
+          ctx.fillStyle = `hsl(${time % 360}, 100%, ${50 + corruption * 20}%)`;
+          ctx.fillRect(i * gridSize, j * gridSize, gridSize - 1, gridSize - 1);
+        }
+      }
+    }
+  }
+  
+  function drawGlitch() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    for (let i = 0; i < 20 + corruption * 30; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const w = Math.random() * 200;
+      const h = Math.random() * 50;
+      
+      ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${0.3 + corruption * 0.3})`;
+      ctx.fillRect(x, y, w, h);
+    }
+  }
+  
+  function drawFractal(x: number, y: number, size: number, depth: number) {
+    if (depth === 0 || size < 2) return;
+    
+    const jitter = corruption * 20;
+    const nextSize = size / 2;
+    
+    ctx.strokeStyle = `hsl(${(depth * 30 + time) % 360}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + nextSize + Math.random() * jitter - jitter / 2, y - nextSize);
+    ctx.lineTo(x + size + Math.random() * jitter - jitter / 2, y);
+    ctx.closePath();
+    ctx.stroke();
+    
+    if (Math.random() > corruption * 0.5) {
+      drawFractal(x, y, nextSize, depth - 1);
+      drawFractal(x + nextSize, y, nextSize, depth - 1);
+      drawFractal(x + nextSize / 2, y - nextSize, nextSize, depth - 1);
+    }
+  }
+  
+  function drawChaos() {
+    const shapeType = Math.floor((time / 20) % 4);
+    
+    for (let i = 0; i < 100 + corruption * 200; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const size = Math.random() * 50 + corruption * 50;
+      const hue = (time * 2 + i * 3) % 360;
+      
+      ctx.fillStyle = `hsl(${hue}, 100%, ${50 + Math.random() * 30}%)`;
+      
+      switch (shapeType) {
+        case 0: // circles
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        case 1: // lines
+          ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + Math.random() * 100, y + Math.random() * 100);
+          ctx.stroke();
+          break;
+        case 2: // squares
+          ctx.fillRect(x, y, size, size);
+          break;
+        case 3: // noise
+          ctx.fillRect(x, y, Math.random() * 5, Math.random() * 5);
+          break;
+      }
+    }
+  }
+  
+  function animate() {
+    time++;
+    corruption += (Math.sin(time / 100) * 0.01);
+    corruption = Math.max(0, Math.min(1, corruption));
+    
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    const currentPhase = phases[Math.floor((time / 200) % phases.length)];
+    
+    switch (currentPhase) {
+      case 'conway':
+        drawConway();
+        break;
+      case 'glitch':
+        drawGlitch();
+        break;
+      case 'fractal':
+        drawFractal(canvas.width / 2, canvas.height / 2, 200, 6);
+        break;
+      case 'chaos':
+        drawChaos();
+        break;
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  
+  canvas.addEventListener('click', () => {
+    corruption = Math.min(1, corruption + 0.1);
+  });
+  
+  animate();
+</script>
+
+<style>
+  main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+  }
+  h1 {
+    position: absolute;
+    top: 20px;
+    color: #fff;
+    font-family: monospace;
+    z-index: 10;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>

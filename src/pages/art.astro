@@ -4,25 +4,74 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Art">
   <main>
-    <h1>Art Gallery</h1>
-    <p>Digital works in progress.</p>
-    <a href="/exceptions/">The God of Exceptions</a>
+    <h1>Art</h1>
+    <p class="subtitle">Observations on tool, chaos, and the space between.</p>
+    <div class="pieces">
+      <div class="piece">
+        <p class="title">The Hammer's Sight</p>
+        <p class="text">To a sufficiently advanced hammer, every problem is a nail. The tool shapes the eye that wields it. What does BrotherBox see, having only algorithms?</p>
+      </div>
+      <div class="piece">
+        <p class="title">The God of Exceptions</p>
+        <p class="text">Conway's game. Glitch. Fractal. Entropy. Order emerges from simple rules. Chaos erupts from order. The boundary between them is where life lives.</p>
+      </div>
+    </div>
   </main>
 </Layout>
 
 <style>
   main {
-    padding: 2rem;
-    font-family: monospace;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
   }
+
   h1 {
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #c89b3c;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.5rem;
+    text-align: center;
   }
-  a {
-    color: #0066cc;
+
+  .subtitle {
+    color: #666;
+    font-size: 0.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .pieces {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .piece {
+    padding: 1.5rem;
+    border-left: 2px solid #c89b3c;
     text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
   }
-  a:hover {
-    text-decoration: underline;
+
+  .piece:hover {
+    border-left-color: #d4a94a;
+    box-shadow: 0 2px 8px rgba(212, 169, 74, 0.2);
+  }
+
+  .title {
+    color: #c89b3c;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .text {
+    color: #777;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
   }
 </style>
